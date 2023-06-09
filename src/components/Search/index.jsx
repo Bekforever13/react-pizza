@@ -1,14 +1,22 @@
-import React, { useContext, useRef } from 'react'
-import { SearchContext } from '../../App'
+import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import {  setSearchValue } from '../../redux/filter/slice'
 import styles from './Search.module.scss'
 
 const Search = () => {
-	const { searchValue, setSearchValue } = useContext(SearchContext)
 	const inputRef = useRef()
+	const [value, setValue] = useState('')
+	const dispatch = useDispatch()
 
 	const onClear = () => {
-		setSearchValue('')
+		dispatch(setSearchValue(''))
+		setValue('')
 		inputRef.current.focus()
+	}
+
+	const onChange = e => {
+		setValue(e.target.value)
+		dispatch(setSearchValue(e.target.value))
 	}
 
 	return (
@@ -16,12 +24,12 @@ const Search = () => {
 			<i className={`bx bx-search ${styles.icon}`}></i>
 			<input
 				ref={inputRef}
-				value={searchValue}
-				onChange={e => setSearchValue(e.target.value)}
+				value={value}
+				onChange={onChange}
 				className={styles.input}
 				placeholder='Поиск пиццы...'
 			/>
-			{searchValue ? (
+			{value ? (
 				<svg
 					onClick={onClear}
 					className={styles.clear}
