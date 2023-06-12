@@ -1,20 +1,20 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import {  setSearchValue } from '../../redux/filter/slice'
+import { setSearchValue } from '../../redux/filter/slice'
 import styles from './Search.module.scss'
 
-const Search = () => {
-	const inputRef = useRef()
-	const [value, setValue] = useState('')
+const Search: React.FC = () => {
+	const inputRef = useRef<HTMLInputElement>(null)
+	const [value, setValue] = useState<string>('')
 	const dispatch = useDispatch()
 
 	const onClear = () => {
 		dispatch(setSearchValue(''))
 		setValue('')
-		inputRef.current.focus()
+		inputRef.current?.focus()
 	}
 
-	const onChange = e => {
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setValue(e.target.value)
 		dispatch(setSearchValue(e.target.value))
 	}
