@@ -1,8 +1,8 @@
-import React from 'react'
+import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import logoSvg from '../assets/img/pizza-logo.svg'
-import { selectCart } from '../redux/cart/slice'
+import { selectCart } from '../redux/cart/selectors'
 import Search from './Search'
 
 /* Если хотите исправить сброс параметров при клике на логотип - то предлагаю свой костыль. Запихнуть isMounted в редакс, а в хедере создать кастомную функцию в которой будем сбрасывать все параметры и соответсвтенно isMounted = false. Код ниже:
@@ -13,9 +13,21 @@ const onClickHome = () => {
     dispatch(changeMount(false))
   } */
 const Header = () => {
+	const isMounted = useRef(false)
 	const { pathname } = useLocation()
 	const { items, totalPrice } = useSelector(selectCart)
-	const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0)
+	const totalCount = items.reduce(
+		(sum: number, item: any) => sum + item.count,
+		0
+	)
+
+	useEffect(() => {
+		if (isMounted.current) {
+			const json = JSON.stringify(items)
+			localStorage.setItem('cart', json)
+		}
+		isMounted.current = true
+	}, [items])
 
 	return (
 		<div className='header'>

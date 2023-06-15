@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setSearchValue } from '../../redux/filter/slice'
+import { setSearchValue } from '../../redux/filter'
 import styles from './Search.module.scss'
 
 const Search: React.FC = () => {

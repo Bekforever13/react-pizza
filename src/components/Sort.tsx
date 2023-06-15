@@ -1,22 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectFilterSort, setSort } from '../redux/filter/slice'
+import { setSort } from '../redux/filter'
+import { Sort, SortPropertyEnum } from '../redux/filter/types'
+import { selectFilterSort } from '../redux/filter/selectors'
+import { type } from 'os'
 
 type ListType = {
-	name: string;
-	sortProperty: string;
+	name: string
+	sortProperty: SortPropertyEnum
+}
+
+type SortPopupProps = {
+	value: Sort
 }
 
 export const list: ListType[] = [
-	{ name: 'популярности (desc)', sortProperty: 'rating' },
-	{ name: 'популярности (asc)', sortProperty: '-rating' },
-	{ name: 'цене (desc)', sortProperty: 'price' },
-	{ name: 'цене (asc)', sortProperty: '-price' },
-	{ name: 'алфавиту (desc)', sortProperty: 'title' },
-	{ name: 'алфавиту (asc)', sortProperty: '-title' },
+	{ name: 'популярности (desc)', sortProperty: SortPropertyEnum.RATING_DESC },
+	{ name: 'популярности (asc)', sortProperty: SortPropertyEnum.RATING_ASC },
+	{ name: 'цене (desc)', sortProperty: SortPropertyEnum.PRICE_DESC },
+	{ name: 'цене (asc)', sortProperty: SortPropertyEnum.PRICE_ASC },
+	{ name: 'алфавиту (desc)', sortProperty: SortPropertyEnum.TITLE_DESC },
+	{ name: 'алфавиту (asc)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ]
 
-const Sort: React.FC = () => {
+const SortPopup: React.FC<SortPopupProps> = ({value}) => {
 	const [open, setOpen] = useState(false)
 	const dispatch = useDispatch()
 	const sort = useSelector(selectFilterSort)
@@ -37,7 +44,7 @@ const Sort: React.FC = () => {
 			}
 		}
 
-		document.body.addEventListener('click', (handleClickOutside))
+		document.body.addEventListener('click', handleClickOutside)
 
 		return () => {
 			document.body.removeEventListener('click', handleClickOutside)
@@ -60,7 +67,7 @@ const Sort: React.FC = () => {
 					/>
 				</svg>
 				<b>Сортировка по:</b>
-				<span onClick={() => setOpen(!open)}>{sort.name}</span>
+				<span onClick={() => setOpen(!open)}>{value.name}</span>
 			</div>
 			{open && (
 				<div className='sort__popup'>
@@ -70,7 +77,7 @@ const Sort: React.FC = () => {
 								key={i}
 								onClick={() => onClickListItem(obj)}
 								className={
-									sort.sortProperty === obj.sortProperty ? 'active' : ''
+									value.sortProperty === obj.sortProperty ? 'active' : ''
 								}
 							>
 								{obj.name}
@@ -83,4 +90,4 @@ const Sort: React.FC = () => {
 	)
 }
 
-export default Sort
+export default SortPopup

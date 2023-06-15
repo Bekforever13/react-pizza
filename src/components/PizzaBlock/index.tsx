@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addItem, selectCartItemById } from '../../redux/cart/slice.js'
+import { Link } from 'react-router-dom'
+import { addItem } from '../../redux/cart'
+import { selectCartItemById } from '../../redux/cart/selectors'
+import { CartItem } from '../../redux/cart/types'
 
 type PizzaItemProps = {
 	id: string
@@ -31,13 +34,14 @@ const PizzaBlock: React.FC<PizzaItemProps> = ({
 
 	const onClickAdd = () => {
 		setPizzaCount(pizzaCount + 1)
-		const item = {
+		const item: CartItem = {
 			id,
 			title,
 			price,
 			imageUrl,
 			type: typeNames[activeType],
 			size: sizes[activeSize],
+			count: 0,
 		}
 		dispatch(addItem(item))
 	}
@@ -45,8 +49,10 @@ const PizzaBlock: React.FC<PizzaItemProps> = ({
 	return (
 		<div className='pizza-block-wrapper'>
 			<div className='pizza-block'>
-				<img className='pizza-block__image' src={imageUrl} alt='Pizza' />
-				<h4 className='pizza-block__title'>{title}</h4>
+				<Link to={`/pizza/${id}`}>
+					<img className='pizza-block__image' src={imageUrl} alt='Pizza' />
+					<h4 className='pizza-block__title'>{title}</h4>
+				</Link>
 				<div className='pizza-block__selector'>
 					<ul>
 						{types.map(typeId => (
